@@ -9,34 +9,34 @@ import uuid
 SERVER = "http://10.0.3.113/"
 ORG_URL = SERVER + "organisation/organisation/"
 
-u = str(uuid.uuid4())
+org_u = str(uuid.uuid4())
 
-val = {
-    "from": "2017-01-01",
+org_val = {
+    "from": "2017-01-01",  # required
     "from_included": True,
-    "to": "2019-12-31",
+    "to": "2019-12-31",  # required
     "to_included": False,
 }
 
-data = {
+org_data = {
     "attributter": {  # required
         "organisationegenskaber": [  # required
             {
                 "brugervendtnoegle": "magenta-aps",  # required
                 "organisationsnavn": "Magenta ApS",
-                "virkning": val,  # required
+                "virkning": org_val,  # requiredg
             }
         ]
     },
     "tilstande": {  # required
         "organisationgyldighed": [  # required
-            {"gyldighed": "Aktiv", "virkning": val}  # required
+            {"gyldighed": "Aktiv", "virkning": org_val}  # required
         ]
     },
 }
 
-putr = requests.put(ORG_URL + u, json=data)
-assert json.loads(putr.text)['uuid'] == u
+org_r = requests.put(ORG_URL + org_u, json=org_data)
+assert json.loads(org_r.text)["uuid"] == org_u
 
 
 #  2. Make a query searching for all organisations in LoRa - confirm that Magenta exists
