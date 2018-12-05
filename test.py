@@ -1,3 +1,4 @@
+import json
 import requests
 import uuid
 
@@ -35,7 +36,7 @@ data = {
 }
 
 putr = requests.put(ORG_URL + u, json=data)
-assert putr.text == '{"uuid":"%s"}\n' % u
+assert json.loads(putr.text)['uuid'] == u
 
 
 #  2. Make a query searching for all organisations in LoRa - confirm that Magenta exists
