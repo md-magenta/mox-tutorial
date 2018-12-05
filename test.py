@@ -1,18 +1,39 @@
 import requests
 import uuid
 
-url = "http://10.0.3.113/organisation/organisation/"
+
+#  1. Create an organisation called e.g. “Magenta” valid from 2017-01-01 (included) to
+#  2019-12-31 (excluded).
+
+SERVER = "http://10.0.3.113/"
+ORG_URL = SERVER + "organisation/organisation/"
+
 u = str(uuid.uuid4())
 
-val = {"from" : "1999-11-01", "to" : "2018-12-04"}
-
-data = {
-    "attributter": {
-        "organisationegenskaber": [{"name": "magenta-aps", "virkning": val}]
-    },
-    "tilstande": {"organisationgyldighed": [{"gyldighed": "Aktiv", "virkning": val}]},
+val = {
+    "from": "2017-01-01",
+    "from_included": True,
+    "to": "2019-12-31",
+    "to_included": False,
 }
 
-r = requests.put(url + u, json=data)
+data = {
+    "attributter": {  # required
+        "organisationegenskaber": [  # required
+            {
+                "brugervendtnoegle": "magenta-aps",  # required
+                "organisationsnavn": "Magenta ApS",
+                "virkning": val,  # required
+            }
+        ]
+    },
+    "tilstande": {  # required
+        "organisationgyldighed": [  # required
+            {"gyldighed": "Aktiv", "virkning": val}  # required
+        ]
+    },
+}
 
-print(r.text)
+putr = requests.put(ORG_URL + u, json=data)
+assert putr.text == '{"uuid":"%s"}\n' % u
+
