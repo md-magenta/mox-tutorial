@@ -42,6 +42,10 @@ assert json.loads(org_r.text)["uuid"] == org_u
 #  2. Make a query searching for all organisations in LoRa - confirm that Magenta exists
 #  in the system.
 
+org_gr = requests.get(ORG_URL, params={"brugervendtnoegle": "%"})
+assert org_u in json.loads(org_gr.text)["results"][0]
+
+
 #  3. Create an organisationenhed called “Copenhagen” (which should be a subunit to
 #  Magenta) active from 2017-01-01 (included) to 2018-03-14 (excluded). Consider which
 #  attributes and relations to set.
