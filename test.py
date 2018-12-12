@@ -83,11 +83,40 @@ cph_u = json.loads(cph_r.text)["uuid"]
 #  active from 2018-01-01 (included) to 2019-09-01 (excluded). Consider which attributes
 #  and relations to set.
 
+aar_val = {
+    "from": "2018-01-01",  # required
+    "from_included": True,
+    "to": "2019-09-01",  # required
+    "to_included": False,
+}
+
+aar_data = {
+    "attributter": {  # required
+        "organisationenhedegenskaber": [  # required
+            {
+                "brugervendtnoegle": "aarhus",  # required
+                "enhedsnavn": "Aarhus",
+                "virkning": aar_val,  # required
+            }
+        ]
+    },
+    "tilstande": {  # required
+        "organisationenhedgyldighed": [  # required
+            {"gyldighed": "Aktiv", "virkning": aar_val}  # required
+        ]
+    },
+    "relationer": {"tilhoerer": [{"uuid": org_u, "virkning": aar_val}]},
+}
+
+aar_r = requests.post(EN_URL, json=aar_data)
+aar_u = json.loads(aar_r.text)["uuid"]
+
 #  5. Make a query searching for all organisationenheder in LoRa - confirm that
 #  Copenhagen and Aarhus exist in the system.
 
 en_gr = requests.get(EN_URL, params={"brugervendtnoegle": "%"})
 assert cph_u in json.loads(en_gr.text)["results"][0]
+assert aar_u in json.loads(en_gr.text)["results"][0]
 
 #  6. Add an address to the org unit in Aarhus (valid within the period where the org
 #  unit is active).
