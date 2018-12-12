@@ -138,6 +138,10 @@ aar_addr_r = requests.put(EN_URL + "/" + aar_u, json=aar_addr_data)
 
 #  7. Fetch the org unit Aarhus and verify that the newly added address is present in
 #  the response.
+aar_addr2_gr = requests.get(EN_URL + "/" + aar_u)
+assert json.loads(aar_addr2_gr.text)[aar_u][0]["registreringer"][0]["relationer"][
+    "adresser"
+]
 
 #  8. Add another address to the org unit in Aarhus (valid in a period exceeding the
 #  period where the org unit is active). What happens in this case?
