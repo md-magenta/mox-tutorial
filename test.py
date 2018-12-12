@@ -1,15 +1,12 @@
 import json
 import requests
-import uuid
 
 
 #  1. Create an organisation called e.g. “Magenta” valid from 2017-01-01 (included) to
 #  2019-12-31 (excluded).
 
 SERVER = "http://10.0.3.113/"
-ORG_URL = SERVER + "organisation/organisation/"
-
-org_u = str(uuid.uuid4())
+ORG_URL = SERVER + "organisation/organisation"
 
 org_val = {
     "from": "2017-01-01",  # required
@@ -35,8 +32,8 @@ org_data = {
     },
 }
 
-org_r = requests.put(ORG_URL + org_u, json=org_data)
-assert json.loads(org_r.text)["uuid"] == org_u
+org_r = requests.post(ORG_URL, json=org_data)
+org_u = json.loads(org_r.text)["uuid"]
 
 
 #  2. Make a query searching for all organisations in LoRa - confirm that Magenta exists
