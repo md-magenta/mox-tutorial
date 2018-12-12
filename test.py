@@ -145,6 +145,31 @@ assert json.loads(aar_addr2_gr.text)[aar_u][0]["registreringer"][0]["relationer"
 #  8. Add another address to the org unit in Aarhus (valid in a period exceeding the
 #  period where the org unit is active). What happens in this case?
 
+
+old_addr = json.loads(aar_addr2_gr.text)[aar_u][0]["registreringer"][0]["relationer"][
+    "adresser"
+]
+aar_addr3_data = {
+    "relationer": {
+        "adresser": old_addr
+        + [
+            {
+                "urn": "dawa:0a3f50c4-379f-32b8-e044-0003ba298019",  # required
+                "virkning": {  # required
+                    "from": "2018-01-01",  # required
+                    "from_included": True,
+                    "to": "2020-08-01",  # required
+                    "to_included": False,
+                },
+            }
+        ]
+    }
+}
+
+
+aar_addr3_r = requests.patch(EN_URL + "/" + aar_u, json=aar_addr3_data)
+
+
 #  9. Remove all addresses from the Aarhus org unit and confirm that they are gone
 #  afterwards.
 
