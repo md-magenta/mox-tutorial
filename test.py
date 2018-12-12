@@ -190,6 +190,40 @@ assert (
 # Copenhagen org unit and they should be active in random intervals ranging from
 # 2017-01-01 (included) to 2019-12-31 (excluded).
 
+
+def addUnits(n):
+    for i in range(1, n + 1):
+        enh_val = {
+            "from": "2017-01-%02d" % i,  # required
+            "from_included": True,
+            "to": "2019-03-%02d" % i,  # required
+            "to_included": False,
+        }
+
+        enh_data = {
+            "attributter": {  # required
+                "organisationenhedegenskaber": [  # required
+                    {
+                        "brugervendtnoegle": "orgEnhed%d" % i,  # required
+                        "virkning": enh_val,  # required
+                    }
+                ]
+            },
+            "tilstande": {  # required
+                "organisationenhedgyldighed": [  # required
+                    {"gyldighed": "Aktiv", "virkning": enh_val}  # required
+                ]
+            },
+            "relationer": {"tilhoerer": [{"uuid": cph_u, "virkning": enh_val}]},
+        }
+
+        enh_r = requests.post(EN_URL, json=enh_data)
+        enh_u = json.loads(enh_r.text)["uuid"]
+
+
+addUnits(15)
+
+
 # 11. Find all active org (if any) in the period from 2017-12-01 to 2019-06-01.
 
 # 12. What are the names of the org units from above?
