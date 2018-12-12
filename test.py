@@ -172,6 +172,18 @@ aar_addr3_r = requests.patch(EN_URL + "/" + aar_u, json=aar_addr3_data)
 
 #  9. Remove all addresses from the Aarhus org unit and confirm that they are gone
 #  afterwards.
+aar_addr4_gr = requests.get(EN_URL + "/" + aar_u)
+aar_addr4_data = json.loads(aar_addr4_gr.text)[aar_u][0]["registreringer"][0]
+
+aar_addr4_data["relationer"].pop("adresser")
+
+aar_addr4_r = requests.put(EN_URL + "/" + aar_u, json=aar_addr4_data)
+
+aar_addr4_gr = requests.get(EN_URL + "/" + aar_u)
+assert (
+    "adresser"
+    not in json.loads(aar_addr4_gr.text)[aar_u][0]["registreringer"][0]["relationer"]
+)
 
 # 10. Make a small script capable of adding n new org units (e.g. where 10 < n < 20)
 # named orgEnhed1, orgEnhed2, orgEnhed3,… These org units should all be subunits of the
