@@ -75,6 +75,7 @@ cph_data = {
             {"gyldighed": "Aktiv", "virkning": cph_val}  # required
         ]
     },
+    "relationer": {"tilhoerer": [{"uuid": org_u, "virkning": cph_val}]},
 }
 
 cph_r = requests.post(EN_URL, json=cph_data)
