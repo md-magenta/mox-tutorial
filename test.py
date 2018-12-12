@@ -121,11 +121,8 @@ assert aar_u in json.loads(en_gr.text)["results"][0]
 #  6. Add an address to the org unit in Aarhus (valid within the period where the org
 #  unit is active).
 
-aar_addr_gr = requests.get(EN_URL + "/" + aar_u)
-
-aar_addr_data = json.loads(aar_addr_gr.text)[aar_u][0]["registreringer"][0]
-aar_addr_data["relationer"].update(
-    {
+aar_addr_data = {
+    "relationer": {
         "adresser": [
             {
                 "urn": "dawa:0a3f50c4-379f-32b8-e044-0003ba298018",  # required
@@ -133,11 +130,13 @@ aar_addr_data["relationer"].update(
             }
         ]
     }
-)
-aar_addr_r = requests.put(EN_URL + "/" + aar_u, json=aar_addr_data)
+}
+aar_addr_r = requests.patch(EN_URL + "/" + aar_u, json=aar_addr_data)
+
 
 #  7. Fetch the org unit Aarhus and verify that the newly added address is present in
 #  the response.
+
 aar_addr2_gr = requests.get(EN_URL + "/" + aar_u)
 assert json.loads(aar_addr2_gr.text)[aar_u][0]["registreringer"][0]["relationer"][
     "adresser"
