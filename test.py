@@ -211,6 +211,7 @@ def addUnits(n):
                 "organisationenhedegenskaber": [  # required
                     {
                         "brugervendtnoegle": "orgEnhed%d" % i,  # required
+                        "enhedsnavn": "orgEnhed%d" % i,
                         "virkning": enh_val,  # required
                     }
                 ]
