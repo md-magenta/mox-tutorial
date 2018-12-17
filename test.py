@@ -72,7 +72,10 @@ cph_data = {
             {"gyldighed": "Aktiv", "virkning": cph_val}  # required
         ]
     },
-    "relationer": {"tilhoerer": [{"uuid": org_u, "virkning": cph_val}]},
+    "relationer": {
+        "overordnet": [{"uuid": org_u, "virkning": cph_val}],
+        "tilhoerer": [{"uuid": org_u, "virkning": cph_val}],
+    },
 }
 
 cph_r = requests.post(EN_URL, json=cph_data)
@@ -105,7 +108,10 @@ aar_data = {
             {"gyldighed": "Aktiv", "virkning": aar_val}  # required
         ]
     },
-    "relationer": {"tilhoerer": [{"uuid": org_u, "virkning": aar_val}]},
+    "relationer": {
+        "overordnet": [{"uuid": org_u, "virkning": aar_val}],
+        "tilhoerer": [{"uuid": org_u, "virkning": aar_val}],
+    },
 }
 
 aar_r = requests.post(EN_URL, json=aar_data)
@@ -214,7 +220,10 @@ def addUnits(n):
                     {"gyldighed": "Aktiv", "virkning": enh_val}  # required
                 ]
             },
-            "relationer": {"tilhoerer": [{"uuid": cph_u, "virkning": enh_val}]},
+            "relationer": {
+                "overordnet": [{"uuid": cph_u, "virkning": enh_val}],
+                "tilhoerer": [{"uuid": org_u, "virkning": enh_val}],
+            },
         }
 
         enh_r = requests.post(EN_URL, json=enh_data)
