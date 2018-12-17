@@ -244,3 +244,16 @@ print(org2_gr.url)
 org2_res = json.loads(org2_gr.text)["results"][0]
 
 # 12. What are the names of the org units from above?
+
+for uuid in org2_res:
+    org3_gr = requests.get(EN_URL, params={"overordnet": uuid})
+    org3_res = json.loads(org3_gr.text)["results"][0]  # aarhus and copenhagen
+    for uuid in org3_res:
+        org4_gr = requests.get(EN_URL, params={"overordnet": uuid})
+        org4_res = json.loads(org4_gr.text)["results"][0]  # orgEnhed%0d
+        for uuid in org4_res:
+            org5_gr = requests.get(EN_URL, params={"uuid": uuid})
+            name = json.loads(org5_gr.text)["results"][0][0]["registreringer"][0][
+                "attributter"
+            ]["organisationenhedegenskaber"][0]["enhedsnavn"]
+            print(name)
