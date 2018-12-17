@@ -236,4 +236,11 @@ addUnits(15)
 
 # 11. Find all active org (if any) in the period from 2017-12-01 to 2019-06-01.
 
+org2_gr = requests.get(
+    ORG_URL,
+    params={"bvn": "%", "virkningFra": "2017-12-01", "virkningTil": "2019-06-01"},
+)
+print(org2_gr.url)
+org2_res = json.loads(org2_gr.text)["results"][0]
+
 # 12. What are the names of the org units from above?
