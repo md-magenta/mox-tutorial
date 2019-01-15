@@ -11,7 +11,7 @@ ORG_URL = SERVER + "organisation/organisation"
 org_val = {
     "from": "2017-01-01",  # required
     "from_included": True,
-    "to": "2019-12-31",  # required
+    "to": "2025-12-31",  # required
     "to_included": False,
 }
 
@@ -21,7 +21,7 @@ org_data = {
             {
                 "brugervendtnoegle": "magenta-aps",  # required
                 "organisationsnavn": "Magenta ApS",
-                "virkning": org_val,  # requiredg
+                "virkning": org_val,  # required
             }
         ]
     },
@@ -47,12 +47,43 @@ assert org_u in json.loads(org_gr.text)["results"][0]
 # ``organisation`` Magenta) active from 2017-01-01 (included) to 2024-03-14 (excluded).
 # Consider which attributes and relations to set.
 
+EN_URL = SERVER + "organisation/organisationenhed"
+
+orgen_val = {
+    "from": "2017-01-01",  # required
+    "from_included": True,
+    "to": "2024-03-14",  # required
+    "to_included": False,
+}
+
+orgen_data = {
+    "attributter": {  # required
+        "organisationenhedegenskaber": [  # required
+            {
+                "brugervendtnoegle": "copenhagen",  # required
+                "enhedsnavn": "Copenhagen",
+                "virkning": orgen_val,  # required
+            }
+        ]
+    },
+    "tilstande": {  # required
+        "organisationenhedgyldighed": [  # required
+            {"gyldighed": "Aktiv", "virkning": orgen_val}  # required
+        ]
+    },
+    "relationer": {
+        "overordnet": [{"uuid": org_u, "virkning": orgen_val}],
+        "tilhoerer": [{"uuid": org_u, "virkning": orgen_val}],
+    },
+}
+
+orgen_r = requests.post(EN_URL, json=orgen_data)
+orgen_u = json.loads(orgen_r.text)["uuid"]
+
 
 # 4. Create an ``organisationenhed`` called “Copenhagen” (which should be a subunit to
 # the ``organisationenhed`` Magenta) active from 2017-01-01 (included) to 2024-03-14
 # (excluded). Consider which attributes and relations to set.
-
-EN_URL = SERVER + "organisation/organisationenhed"
 
 
 cph_val = {
@@ -78,7 +109,7 @@ cph_data = {
         ]
     },
     "relationer": {
-        "overordnet": [{"uuid": org_u, "virkning": cph_val}],
+        "overordnet": [{"uuid": orgen_u, "virkning": cph_val}],
         "tilhoerer": [{"uuid": org_u, "virkning": cph_val}],
     },
 }
@@ -114,7 +145,7 @@ aar_data = {
         ]
     },
     "relationer": {
-        "overordnet": [{"uuid": org_u, "virkning": aar_val}],
+        "overordnet": [{"uuid": orgen_u, "virkning": aar_val}],
         "tilhoerer": [{"uuid": org_u, "virkning": aar_val}],
     },
 }
@@ -123,9 +154,10 @@ aar_r = requests.post(EN_URL, json=aar_data)
 aar_u = json.loads(aar_r.text)["uuid"]
 
 # 6. Make a query searching for all ``organisationenhed`` in LoRa - confirm that
-# Copenhagen and Aarhus exist in the system.
+# Magenta, Copenhagen and Aarhus exist in the system.
 
 en_gr = requests.get(EN_URL, params={"brugervendtnoegle": "%"})
+assert orgen_u in json.loads(en_gr.text)["results"][0]
 assert cph_u in json.loads(en_gr.text)["results"][0]
 assert aar_u in json.loads(en_gr.text)["results"][0]
 
