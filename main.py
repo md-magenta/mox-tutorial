@@ -89,7 +89,7 @@ orgen_u = json.loads(orgen_r.text)["uuid"]
 cph_val = {
     "from": "2017-01-01",  # required
     "from_included": True,
-    "to": "2019-03-14",  # required
+    "to": "2024-03-14",  # required
     "to_included": False,
 }
 
@@ -125,7 +125,7 @@ cph_u = json.loads(cph_r.text)["uuid"]
 aar_val = {
     "from": "2018-01-01",  # required
     "from_included": True,
-    "to": "2019-09-01",  # required
+    "to": "2025-09-01",  # required
     "to_included": False,
 }
 
@@ -242,7 +242,7 @@ def addUnits(n):
         enh_val = {
             "from": "2017-01-%02d" % i,  # required
             "from_included": True,
-            "to": "2019-03-%02d" % i,  # required
+            "to": "2025-12-%02d" % i,  # required
             "to_included": False,
         }
 
@@ -279,9 +279,9 @@ addUnits(15)
 
 org2_gr = requests.get(
     ORG_URL,
-    params={"bvn": "%", "virkningFra": "2017-12-01", "virkningTil": "2019-06-01"},
+    params={"bvn": "%", "virkningFra": "2017-12-01", "virkningTil": "2025-06-01"},
 )
-print(org2_gr.url)
+
 org2_res = json.loads(org2_gr.text)["results"][0]
 
 # 13. What are the names of the ``organisationenhed`` from above?
@@ -297,4 +297,4 @@ for uuid in org2_res:
             name = json.loads(org5_gr.text)["results"][0][0]["registreringer"][0][
                 "attributter"
             ]["organisationenhedegenskaber"][0]["enhedsnavn"]
-            print(name)
+            # print(name)
