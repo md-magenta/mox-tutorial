@@ -5,7 +5,7 @@ import requests
 # 1. Create an ``organisation`` called e.g. “Magenta” valid from 2017-01-01 (included)
 # to 2025-12-31 (excluded).
 
-SERVER = "http://10.0.3.113/"
+SERVER = "http://192.168.50.2:5000/"
 ORG_URL = SERVER + "organisation/organisation"
 
 org_val = {
