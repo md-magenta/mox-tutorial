@@ -2,8 +2,8 @@ import json
 import requests
 
 
-#  1. Create an organisation called e.g. “Magenta” valid from 2017-01-01 (included) to
-#  2019-12-31 (excluded).
+# 1. Create an ``organisation`` called e.g. “Magenta” valid from 2017-01-01 (included)
+# to 2025-12-31 (excluded).
 
 SERVER = "http://10.0.3.113/"
 ORG_URL = SERVER + "organisation/organisation"
@@ -36,16 +36,21 @@ org_r = requests.post(ORG_URL, json=org_data)
 org_u = json.loads(org_r.text)["uuid"]
 
 
-#  2. Make a query searching for all organisations in LoRa - confirm that Magenta exists
-#  in the system.
+# 2. Make a query searching for all ``organisation`` in LoRa - confirm that Magenta
+# exists in the system.
 
 org_gr = requests.get(ORG_URL, params={"brugervendtnoegle": "%"})
 assert org_u in json.loads(org_gr.text)["results"][0]
 
 
-#  3. Create an organisationenhed called “Copenhagen” (which should be a subunit to
-#  Magenta) active from 2017-01-01 (included) to 2018-03-14 (excluded). Consider which
-#  attributes and relations to set.
+# 3. Create an ``organisationenhed`` called “Magenta” (which should be a subunit to the
+# ``organisation`` Magenta) active from 2017-01-01 (included) to 2024-03-14 (excluded).
+# Consider which attributes and relations to set.
+
+
+# 4. Create an ``organisationenhed`` called “Copenhagen” (which should be a subunit to
+# the ``organisationenhed`` Magenta) active from 2017-01-01 (included) to 2024-03-14
+# (excluded). Consider which attributes and relations to set.
 
 EN_URL = SERVER + "organisation/organisationenhed"
 
@@ -82,9 +87,9 @@ cph_r = requests.post(EN_URL, json=cph_data)
 cph_u = json.loads(cph_r.text)["uuid"]
 
 
-#  4. Create an organisationenhed called “Aarhus” (which should be a subunit of Magenta)
-#  active from 2018-01-01 (included) to 2019-09-01 (excluded). Consider which attributes
-#  and relations to set.
+# 5. Create an ``organisationenhed`` called “Aarhus” (which should be a subunit of the
+# ``organisationenhed`` Magenta) active from 2018-01-01 (included) to 2025-09-01
+# (excluded). Consider which attributes and relations to set.
 
 aar_val = {
     "from": "2018-01-01",  # required
@@ -117,15 +122,15 @@ aar_data = {
 aar_r = requests.post(EN_URL, json=aar_data)
 aar_u = json.loads(aar_r.text)["uuid"]
 
-#  5. Make a query searching for all organisationenheder in LoRa - confirm that
-#  Copenhagen and Aarhus exist in the system.
+# 6. Make a query searching for all ``organisationenhed`` in LoRa - confirm that
+# Copenhagen and Aarhus exist in the system.
 
 en_gr = requests.get(EN_URL, params={"brugervendtnoegle": "%"})
 assert cph_u in json.loads(en_gr.text)["results"][0]
 assert aar_u in json.loads(en_gr.text)["results"][0]
 
-#  6. Add an address to the org unit in Aarhus (valid within the period where the org
-#  unit is active).
+# 7. Add an ``address`` to the ``organisationenhed`` Aarhus (valid within the period
+# where the ``organisationenhed`` is active).
 
 aar_addr_data = {
     "relationer": {
@@ -140,16 +145,17 @@ aar_addr_data = {
 aar_addr_r = requests.patch(EN_URL + "/" + aar_u, json=aar_addr_data)
 
 
-#  7. Fetch the org unit Aarhus and verify that the newly added address is present in
-#  the response.
+# 8. Fetch the ``organisationenhed`` Aarhus and verify that the newly added ``address``
+# is present in the response.
 
 aar_addr2_gr = requests.get(EN_URL + "/" + aar_u)
 assert json.loads(aar_addr2_gr.text)[aar_u][0]["registreringer"][0]["relationer"][
     "adresser"
 ]
 
-#  8. Add another address to the org unit in Aarhus (valid in a period exceeding the
-#  period where the org unit is active). What happens in this case?
+# 9. Add another ``address`` to the ``organisationenhed`` Aarhus (valid in a period
+# exceeding the period where the ``organisationenhed`` is active). What happens in this
+# case?
 
 
 old_addr = json.loads(aar_addr2_gr.text)[aar_u][0]["registreringer"][0]["relationer"][
@@ -176,8 +182,9 @@ aar_addr3_data = {
 aar_addr3_r = requests.patch(EN_URL + "/" + aar_u, json=aar_addr3_data)
 
 
-#  9. Remove all addresses from the Aarhus org unit and confirm that they are gone
-#  afterwards.
+# 10. Remove all ``address`` from the ``organisationenhed`` Aarhus and confirm that
+# they are gone afterwards.
+
 aar_addr4_gr = requests.get(EN_URL + "/" + aar_u)
 aar_addr4_data = json.loads(aar_addr4_gr.text)[aar_u][0]["registreringer"][0]
 
@@ -191,10 +198,11 @@ assert (
     not in json.loads(aar_addr4_gr.text)[aar_u][0]["registreringer"][0]["relationer"]
 )
 
-# 10. Make a small script capable of adding n new org units (e.g. where 10 < n < 20)
-# named orgEnhed1, orgEnhed2, orgEnhed3,… These org units should all be subunits of the
-# Copenhagen org unit and they should be active in random intervals ranging from
-# 2017-01-01 (included) to 2019-12-31 (excluded).
+# 11. Make a small script capable of adding ``n`` new ``organisationenhed`` (e.g. where
+# 10 < ``n`` < 20) named orgEnhed1, orgEnhed2, orgEnhed3,... These ``organisationenhed``
+# should all be subunits of the ``organisationenhed`` Copenhagen and they should be
+# active in random intervals ranging from 2017-01-01 (included) to 2025-12-31
+# (excluded).
 
 
 def addUnits(n):
@@ -234,7 +242,8 @@ def addUnits(n):
 addUnits(15)
 
 
-# 11. Find all active org (if any) in the period from 2017-12-01 to 2019-06-01.
+# 12. Find all active ``organisation`` (if any) in the period from 2017-12-01 to
+# 2025-06-01.
 
 org2_gr = requests.get(
     ORG_URL,
@@ -243,7 +252,7 @@ org2_gr = requests.get(
 print(org2_gr.url)
 org2_res = json.loads(org2_gr.text)["results"][0]
 
-# 12. What are the names of the org units from above?
+# 13. What are the names of the ``organisationenhed`` from above?
 
 for uuid in org2_res:
     org3_gr = requests.get(EN_URL, params={"overordnet": uuid})
